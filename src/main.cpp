@@ -190,7 +190,7 @@ void run_cycle() {
             break;
 
         case 0xC000: // CXNN: Sets VX to the result of a random number and NN
-            data_registers[(opcode & 0x0F00) >> 8] = (rand() % 255) & data_registers[opcode & 0x00FF];
+            data_registers[(opcode & 0x0F00) >> 8] = (rand() % 255) & (opcode & 0x00FF);
             program_offset += 2;
             break;
 
