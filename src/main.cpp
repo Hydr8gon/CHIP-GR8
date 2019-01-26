@@ -49,6 +49,11 @@ void scan_input() {
             if (ch == keymap[i])
                 keys[i] = true;
         }
+
+        if (ch == ' ') {
+            endwin();
+            exit(0);
+        }
     }
 }
 
@@ -216,13 +221,11 @@ void run_cycle() {
             switch (opcode & 0x00FF)
             {
                 case 0x009E: // EX9E: Skips the next instruction if the key stored in VX is pressed
-                    scan_input();
                     if (keys[data_registers[(opcode & 0x0F00) >> 8]])
                         program_offset += 2;
                     program_offset += 2;
                     break;
                 case 0x00A1: // EXA1: Skips the next instruction if the key stored in VX isn't pressed
-                    scan_input();
                     if (!keys[data_registers[(opcode & 0x0F00) >> 8]])
                         program_offset += 2;
                     program_offset += 2;
@@ -338,7 +341,9 @@ int main(int argc, char **argv) {
     noecho();
     nodelay(stdscr, true);
 
-    while (getch() != ' ') {
+    while (true) {
+        scan_input();
+
         run_cycle();
 
         // Draw the screen
