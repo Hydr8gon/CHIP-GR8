@@ -85,13 +85,13 @@ void run_cycle() {
             break;
 
         case 0x3000: // 3XNN: Skips the next instruction if VX equals NN
-            if (data_registers[(opcode & 0x0F00) >> 8] == opcode & 0x00FF)
+            if (data_registers[(opcode & 0x0F00) >> 8] == (opcode & 0x00FF))
                 program_offset += 2;
             program_offset += 2;
             break;
 
         case 0x4000: // 4XNN: Skips the next instruction if VX doesn't equal NN
-            if (data_registers[(opcode & 0x0F00) >> 8] != opcode & 0x00FF)
+            if (data_registers[(opcode & 0x0F00) >> 8] != (opcode & 0x00FF))
                 program_offset += 2;
             program_offset += 2;
             break;
@@ -174,8 +174,8 @@ void run_cycle() {
             }
             break;
 
-        case 0x9000: // 9XY0 Skips the next instruction if VX doesn't equal VY
-            if (data_registers[(opcode & 0x0F00) >> 8] != opcode & 0x00FF)
+        case 0x9000: // 9XY0: Skips the next instruction if VX doesn't equal VY
+            if (data_registers[(opcode & 0x0F00) >> 8] != data_registers[(opcode & 0x00F0) >> 4])
                 program_offset += 2;
             program_offset += 2;
             break;
