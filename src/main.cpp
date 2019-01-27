@@ -41,19 +41,25 @@ const char keymap[] = {
     'z', 'x', 'c', 'v'
 };
 
-void scan_input() {
-    char ch;
-    memset(keys, false, sizeof(keys));
-    while ((ch = getch()) != ERR) {
-        for (int i = 0; i < 16; i++) {
-            if (ch == keymap[i])
-                keys[i] = true;
-        }
+void scan_input(bool toggle) {
+    char ch = getch();
 
-        if (ch == ' ') {
-            endwin();
-            exit(0);
+    if (!toggle)
+        memset(keys, false, sizeof(keys));
+    for (int i = 0; i < 16; i++) {
+        if (ch == keymap[i]) {
+            if (keys[i]) {
+                keys[i] = false;
+            } else {
+                memset(keys, false, sizeof(keys));
+                keys[i] = true;
+            }
         }
+    }
+
+    if (ch == ' ') {
+        endwin();
+        exit(0);
     }
 }
 
@@ -248,7 +254,7 @@ void run_cycle() {
                 case 0x000A: // FX0A: Waits for a key press and then stores the key in VX
                     data_registers[(opcode & 0x0F00) >> 8] = 16;
                     while (data_registers[(opcode & 0x0F00) >> 8] == 16) {
-                        scan_input();
+                        scan_input(false);
                         for (int i = 0; i < 16; i++) {
                             if (keys[i])
                                 data_registers[(opcode & 0x0F00) >> 8] = i;
@@ -342,7 +348,7 @@ int main(int argc, char **argv) {
     nodelay(stdscr, true);
 
     while (true) {
-        scan_input();
+        scan_input(true);
 
         run_cycle();
 
