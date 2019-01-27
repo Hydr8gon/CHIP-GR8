@@ -367,7 +367,7 @@ int main(int argc, char **argv) {
                     attron(A_REVERSE);
                 else
                     attroff(A_REVERSE);
-                printw(" .");
+                printw("  ");
             }
             wmove(stdscr, y, 0);
         }
