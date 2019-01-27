@@ -291,12 +291,12 @@ void run_cycle() {
                     break;
 
                 case 0x0055: // FX55: Stores V0 to VX in memory starting at VI
-                    memcpy(&data_registers[address_register], data_registers, (opcode & 0x0F00) >> 8);
+                    memcpy(&data_registers[address_register], data_registers, ((opcode & 0x0F00) >> 8) + 1);
                     program_offset += 2;
                     break;
 
                 case 0x0065: // FX65: Fills V0 to VX in memory with values starting at VI
-                    memcpy(data_registers, &data_registers[address_register], (opcode & 0x0F00) >> 8);
+                    memcpy(data_registers, &data_registers[address_register], ((opcode & 0x0F00) >> 8) + 1);
                     program_offset += 2;
                     break;
 
