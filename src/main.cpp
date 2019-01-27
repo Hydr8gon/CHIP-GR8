@@ -316,8 +316,11 @@ void run_cycle() {
     if (delay_timer > 0)
         delay_timer--;
 
-    if (sound_timer > 0)
+    if (sound_timer > 0) {
         sound_timer--;
+        if (sound_timer == 0)
+            beep();
+    }
 }
 
 int main(int argc, char **argv) {
