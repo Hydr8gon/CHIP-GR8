@@ -148,33 +148,35 @@ void run_cycle() {
                     break;
 
                 case 0x0004: // 8XY4: Adds VY to VX and sets VF based on if there was a carry
-                    data_registers[15] = (data_registers[(opcode & 0x0F00) >> 8] +
+                    data_registers[0xF] = (data_registers[(opcode & 0x0F00) >> 8] +
                             data_registers[(opcode & 0x00F0) >> 4] > 0xFF);
                     data_registers[(opcode & 0x0F00) >> 8] += data_registers[(opcode & 0x00F0) >> 4];
                     program_offset += 2;
                     break;
 
                 case 0x0005: // 8XY5: Subtracts VY from VX and sets VF based on if there was a borrow
-                    data_registers[15] = (data_registers[(opcode & 0x0F00) >> 8] < data_registers[(opcode & 0x00F0) >> 4]);
+                    data_registers[0xF] = (data_registers[(opcode & 0x0F00) >> 8] >=
+                            data_registers[(opcode & 0x00F0) >> 4]);
                     data_registers[(opcode & 0x0F00) >> 8] -= data_registers[(opcode & 0x00F0) >> 4];
                     program_offset += 2;
                     break;
 
                 case 0x0006: // 8XY6: Shifts VX to the right by 1 and stores the least significant bit in VF
-                    data_registers[15] = data_registers[(opcode & 0x0F00) >> 8] & 0x01;
+                    data_registers[0xF] = data_registers[(opcode & 0x0F00) >> 8] & 0x01;
                     data_registers[(opcode & 0x0F00) >> 8] >>= 1;
                     program_offset += 2;
                     break;
 
                 case 0x0007: // 8XY7: Sets VX to VY minus VX and sets VF based on if there was a borrow
-                    data_registers[15] = (data_registers[(opcode & 0x00F0) >> 4] < data_registers[(opcode & 0x0F00) >> 8]);
+                    data_registers[0xF] = (data_registers[(opcode & 0x00F0) >> 4] >=
+                            data_registers[(opcode & 0x0F00) >> 8]);
                     data_registers[(opcode & 0x0F00) >> 8] = data_registers[(opcode & 0x00F0) >> 4] -
                             data_registers[(opcode & 0x0F00) >> 8];
                     program_offset += 2;
                     break;
 
                 case 0x000E: // 8XYE: Shifts VX to the left by 1 and stores the most significant bit in VF
-                    data_registers[15] = data_registers[(opcode & 0x0F00) >> 8] >> 7;
+                    data_registers[0xF] = data_registers[(opcode & 0x0F00) >> 8] >> 7;
                     data_registers[(opcode & 0x0F00) >> 8] <<= 1;
                     program_offset += 2;
                     break;
@@ -207,7 +209,7 @@ void run_cycle() {
             break;
 
         case 0xD000: // DXYN: Draws a sprite stored in VI at (VX, VY) with width 8 and height N
-            data_registers[15] = 0;
+            data_registers[0xF] = 0;
             for (int y = 0; y < (opcode & 0x000F); y++) {
                 uint8_t data = memory[address_register + y];
                 for (int x = 0; x < 8; x++) {
@@ -216,7 +218,7 @@ void run_cycle() {
                                 data_registers[(opcode & 0x0F00) >> 8] + x) % (64 * 32)];
                         *pixel = !(*pixel);
                         if (!(*pixel))
-                            data_registers[15] = 1;
+                            data_registers[0xF] = 1;
                     }
                 }
             }
