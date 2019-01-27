@@ -1,3 +1,4 @@
+#include <chrono>
 #include <curses.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -351,6 +352,8 @@ int main(int argc, char **argv) {
     nodelay(stdscr, true);
 
     while (true) {
+        std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+
         scan_input(true);
 
         run_cycle();
@@ -368,7 +371,9 @@ int main(int argc, char **argv) {
         }
         wrefresh(stdscr);
 
-        usleep(100000 / 60);
+        std::chrono::duration<double> elapsed = std::chrono::steady_clock::now() - start;
+        if (elapsed.count() < 1.0f / 60)
+            usleep((1.0f / 60 - elapsed.count()) * 100000);
     }
 
     endwin();
