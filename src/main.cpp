@@ -36,10 +36,10 @@ const uint8_t fontset[80] = {
 };
 
 const char keymap[] = {
-    '1', '2', '3', '4',
-    'q', 'w', 'e', 'r',
-    'a', 's', 'd', 'f',
-    'z', 'x', 'c', 'v'
+    'x', '1', '2', '3',
+    'q', 'w', 'e', 'a',
+    's', 'd', 'z', 'c',
+    '4', 'r', 'f', 'v'
 };
 
 void scan_input(bool toggle) {
