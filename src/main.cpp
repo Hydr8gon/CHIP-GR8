@@ -49,12 +49,12 @@ void run_cycle() {
         case 0x0000:
             switch (opcode)
             {
-                case 0x00E0: // 0x00E0: Clear the screen
+                case 0x00E0: // 00E0: Clear the screen
                     memset(pixels, 0, sizeof(pixels));
                     program_counter += 2;
                     break;
 
-                case 0x00EE: // 0x00EE: Return from a subroutine
+                case 0x00EE: // 00EE: Return from a subroutine
                     program_counter = stack[--stack_current] + 2;
                     break;
 
@@ -190,8 +190,8 @@ void run_cycle() {
                 uint8_t data = memory[address_register + y];
                 for (int x = 0; x < 8; x++) {
                     if (data & (0x80 >> x)) {
-                        uint8_t *pixel = &pixels[((data_registers[(opcode & 0x00F0) >> 4] + y)
-                                * 64 + data_registers[(opcode & 0x0F00) >> 8] + x)];
+                        uint8_t *pixel = &pixels[((data_registers[(opcode & 0x00F0) >> 4] + y) *
+                                64 + data_registers[(opcode & 0x0F00) >> 8] + x) % (64 * 32)];
                         *pixel = ~(*pixel);
                         if (!(*pixel))
                             data_registers[0xF] = 1;
