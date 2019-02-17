@@ -1,7 +1,5 @@
 #include <chrono>
 #include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include "GL/glut.h"
@@ -47,8 +45,7 @@ void run_cycle() {
 
     switch (opcode & 0xF000) {
         case 0x0000:
-            switch (opcode)
-            {
+            switch (opcode) {
                 case 0x00E0: // 00E0: Clear the screen
                     memset(pixels, 0, sizeof(pixels));
                     program_counter += 2;
@@ -102,8 +99,7 @@ void run_cycle() {
             break;
 
         case 0x8000:
-            switch (opcode & 0x000F)
-            {
+            switch (opcode & 0x000F) {
                 case 0x0000: // 8XY0: Set VX to the value of VY
                     data_registers[(opcode & 0x0F00) >> 8] = data_registers[(opcode & 0x00F0) >> 4];
                     program_counter += 2;
@@ -203,8 +199,7 @@ void run_cycle() {
             break;
 
         case 0xE000:
-            switch (opcode & 0x00FF)
-            {
+            switch (opcode & 0x00FF) {
                 case 0x009E: // EX9E: Skip the next instruction if the key stored in VX is pressed
                     if (keys[data_registers[(opcode & 0x0F00) >> 8]])
                         program_counter += 2;
@@ -222,8 +217,7 @@ void run_cycle() {
             break;
 
         case 0xF000:
-            switch (opcode & 0x00FF)
-            {
+            switch (opcode & 0x00FF) {
                 case 0x0007: // FX07: Set VX to the value of the delay timer
                     data_registers[(opcode & 0x0F00) >> 8] = delay_timer;
                     program_counter += 2;
@@ -331,8 +325,8 @@ void loop() {
     draw();
 
     std::chrono::duration<double> elapsed = std::chrono::steady_clock::now() - start;
-    if (elapsed.count() < 1.0f / 60)
-        usleep((1.0f / 60 - elapsed.count()) * 100000);
+    if (elapsed.count() < 1.0f / 600)
+        usleep((1.0f / 600 - elapsed.count()) * 1000000);
 
     glutPostRedisplay();
 }
